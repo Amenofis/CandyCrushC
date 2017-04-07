@@ -1,6 +1,8 @@
 #include "candy.h"
 
 #include <stdlib.h>
+#include <stdio.h>
+
 
 struct Candy {
 	int symbol;
@@ -9,7 +11,7 @@ struct Candy {
 
 CandyPtr createCandy() {
 	CandyPtr mCandy = malloc(sizeof * mCandy);
-	mCandy->symbol = (rand() % (68 + 1 - 65)) + 65;
+	mCandy->symbol = (rand()%3) + 65;
 	mCandy->value = mCandy->symbol;
 	return mCandy;
 }

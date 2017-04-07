@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 struct Board {
 	CandyPtr **m;
@@ -11,7 +12,7 @@ struct Board {
 };
 
 BoardPtr createBoard(int n, int m, Params params, CODE *status) {
-	system("clear");
+	clear();
 	if (n>0 && m>0) {
 		BoardPtr mBoard = malloc(sizeof * mBoard);
 		if (mBoard) { // Succesfully initialized BoardPtr
@@ -26,18 +27,18 @@ BoardPtr createBoard(int n, int m, Params params, CODE *status) {
 					mBoard->m[i] = (CandyPtr*)calloc(m, sizeof(CandyPtr));
 					if (!mBoard->m[i]) {
 						printf("Returning null...\n");
-						*status = NOT_ENOUGH_MINERALS;
+						*status = NOT_ENOUGH_MEMORY;
 						return NULL;
 					}
 				}
-				printf("Board OK...\n");
+				printf("Board OK!\n");
 				*status = OK;
 				return mBoard;
 			} else {
-				*status = IMPOSSIBLE_VALID_BOARD;
+				*status = NOT_ENOUGH_MEMORY;
 			}
 		} else {
-			*status = IMPOSSIBLE_VALID_BOARD;
+			*status = NOT_ENOUGH_MEMORY;
 		}
 	} else {
 		*status = IMPOSSIBLE_VALID_BOARD;
@@ -47,38 +48,55 @@ BoardPtr createBoard(int n, int m, Params params, CODE *status) {
 
 void initializeLevel(BoardPtr board, int level, CODE *status) {
 	printf("Preparing Board... ");
+	srand(time(NULL));
 	int x, y;
 	for (x = 0; x < board->r; x++) {
 		for (y = 0; y < board->c ; y++) {
-			board->m[x][y] = createCandy();
+			CandyPtr c;
+			do {
+				c = createCandy();
+			} while(checkCandies(board, c, x, y) == FALSE);
+
+			board->m[x][y] = c;
 		}
 	}
 	board->rdy = TRUE;
 }
 
 void displayBoard(BoardPtr board, CODE *status) {
-	printf("All ready, level start... \n\n");
 	if (board) {
+		printf("All ready, level start... \n\n");
 		int x,y;
 
-		// ┌─────────┐ //
+		// ┌───┬───┬───┐
+		// │ C │ C │ C │
+		// ├───┼───┼───┤
+		// │ C │ C │ C │
+		// ├───┼───┼───┤
+		// │ C │ C │ C │ 
+		// └───┴───┴───┘ 
+
+		// ┌─────────┐
 		printf("┌");
 		for (x = 0; x < board->r; x++)
 			printf("────");
 		printf("┐\n");
 
-
 		for (x = 0; x < board->r; x++) {
 			for (y = 0; y < board->c; y++) {
 				printf("│ %c ", getCandy(board->m[x][y]));
 			}
+			// │ C │ C │ C │
+
 			printf(" │\n");
 			if ( (x+1) < board->r ) {
+
 				printf("├");
 				for (y = 0; y < board->c; y++) {
 					printf("────");
 				}
 				printf("┤\n");
+				// ├────────────┤
 			}
 		}
 		
@@ -86,18 +104,44 @@ void displayBoard(BoardPtr board, CODE *status) {
 		for (x = 0; x < board->r; x++)
 			printf("────");
 		printf("┘\n");
-		// └─────────┘ //
+		// └─────────┘ 
 
 		*status = OK;
 	}
 	*status = IMPOSSIBLE_VALID_BOARD;
 }
 
+BOOL checkCandies(BoardPtr board, CandyPtr candy, int x, int y) {
+	if (x < 2 && y < 2) {
+		return TRUE;
+	} else {
+		int i;
+		int COL, ROW;
+		int hCheck, rCheck;
+		COL = y >= 2 ? y - 2 : y; // COLS TO CHECK
+		ROW = x >= 2 ? x - 2 : x; // ROWS TO CHECK
+
+		if (y >= 2 ) { // HORIZONTAL CHECK
+			hCheck = 0;
+			for (i = y-1; i >= COL; i--) {
+				if (getCandy(candy) == getCandy(board->m[x][i])) hCheck++;
+			}
+			if (hCheck == 2) return FALSE;
+		}
+		if (x >= 2) { // VERTICAL CHECK
+			rCheck = 0;
+			for (i = x-1; i >= ROW; i--) {
+				if (getCandy(candy) == getCandy(board->m[i][y])) rCheck++;
+			}
+			if (rCheck == 2) return FALSE;
+		}
+		return TRUE;
+	}
+}
 
 
-/*
 void destroyBoard(BoardPtr *board) {
-	BoardPtr *temp;
+	BoardPtr temp;
 	temp = *board;
 	int i;
 	for (i = 0; i < temp->r; i++)
@@ -107,4 +151,3 @@ void destroyBoard(BoardPtr *board) {
 
 	*board = NULL;
 }
-*/

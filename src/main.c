@@ -2,9 +2,6 @@
 
 #include <stdio.h>
 
-#define clear() printf("\033[H\033[J")
-#define gotoxy(x,y) printf("\033[%d;%dH", (x), (y))
-
 int main(int argc, char* argv[]) {
 
 	CODE status;
@@ -35,7 +32,9 @@ int main(int argc, char* argv[]) {
 	*/
 	
 	getchar();
-	//destroyBoard(&board);
+	destroyBoard(&board);
+	if (board == NULL)
+		printf("Board Destroyed\n");
 
 	return 0;
 }

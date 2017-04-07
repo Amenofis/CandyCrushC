@@ -15,8 +15,8 @@ createdirs:
 $(ODIR)/board.o: $(SRC)/board.c $(SRC)/board.h $(SRC)/models.h
 	$(CC) $(SRC)/board.c $(OPTIONS) -c -o $(ODIR)/board.o
 
-$(ODIR)/candy.o: $(SRC)/Candy.c $(SRC)/Candy.h $(SRC)/models.h
-	$(CC) $(SRC)/Candy.c $(OPTIONS) -c -o $(ODIR)/Candy.o
+$(ODIR)/candy.o: $(SRC)/candy.c $(SRC)/candy.h $(SRC)/models.h
+	$(CC) $(SRC)/candy.c $(OPTIONS) -c -o $(ODIR)/candy.o
 
 clean:
 	rmdir -fr $(ODIR)
