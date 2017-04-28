@@ -2,9 +2,9 @@
 
 #include <stdio.h>
 
-int main(int argc, char* argv[]) {
+void main() {
 
-	CODE status;
+	code status;
 	Params p;
 	p.foo = 1;
 	p.bar = 2;
@@ -36,5 +36,5 @@ int main(int argc, char* argv[]) {
 	if (board == NULL)
 		printf("Board Destroyed\n");
 
-	return 0;
+	
 }

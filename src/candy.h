@@ -5,6 +5,8 @@
 
 typedef struct Candy* CandyPtr;
 
+typedef struct Type* TypePtr;
+
 CandyPtr createCandy(); 
 
 char getCandy(CandyPtr c);

@@ -1,21 +1,27 @@
 #include "board.h"
-#include "Candy.h"
+#include "candy.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
 
 struct Board {
+	int id, r, c;
+	unsigned short turns, turnsLeft;
+	boolean rdy;
 	CandyPtr **m;
-	int r, c;
-	BOOL rdy;
 };
 
-BoardPtr createBoard(int n, int m, Params params, CODE *status) {
+struct Position {
+	int x, y;
+}
+
+
+BoardPtr createBoard(int n, int m, Params params, code *status) {
 	clear();
 	if (n>0 && m>0) {
 		BoardPtr mBoard = malloc(sizeof * mBoard);
-		if (mBoard) { // Succesfully initialized BoardPtr
+		if (mBoard) {
 			mBoard->r = n;
 			mBoard->c = m;
 			mBoard->m = (CandyPtr**)malloc(sizeof(CandyPtr)*n);
@@ -46,7 +52,7 @@ BoardPtr createBoard(int n, int m, Params params, CODE *status) {
 	return NULL;
 }
 
-void initializeLevel(BoardPtr board, int level, CODE *status) {
+void initializeLevel(BoardPtr board, int level, code *status) {
 	printf("Preparing Board... ");
 	srand(time(NULL));
 	int x, y;
@@ -55,15 +61,14 @@ void initializeLevel(BoardPtr board, int level, CODE *status) {
 			CandyPtr c;
 			do {
 				c = createCandy();
-			} while(checkCandies(board, c, x, y) == FALSE);
-
+			} while(checkInitializedCandies(board, c, x, y) == FALSE);
 			board->m[x][y] = c;
 		}
 	}
 	board->rdy = TRUE;
 }
 
-void displayBoard(BoardPtr board, CODE *status) {
+void displayBoard(BoardPtr board, code *status) {
 	if (board) {
 		printf("All ready, level start... \n\n");
 		int x,y;
@@ -111,13 +116,11 @@ void displayBoard(BoardPtr board, CODE *status) {
 	*status = IMPOSSIBLE_VALID_BOARD;
 }
 
-BOOL checkCandies(BoardPtr board, CandyPtr candy, int x, int y) {
+boolean checkInitializedCandies(BoardPtr board, CandyPtr candy, int x, int y) {
 	if (x < 2 && y < 2) {
 		return TRUE;
 	} else {
-		int i;
-		int COL, ROW;
-		int hCheck, rCheck;
+		int i, COL, ROW, hCheck, rCheck;
 		COL = y >= 2 ? y - 2 : y; // COLS TO CHECK
 		ROW = x >= 2 ? x - 2 : x; // ROWS TO CHECK
 

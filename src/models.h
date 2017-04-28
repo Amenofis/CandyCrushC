@@ -4,10 +4,6 @@
 #define _MODELS_H_
 
 typedef struct {
-	//Board board;
-} Game;
-
-typedef struct {
 	int cordX;
 	int cordY;
 } Position;

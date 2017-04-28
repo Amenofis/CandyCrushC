@@ -9,13 +9,13 @@
 
 typedef struct Board* BoardPtr;
 
-BoardPtr createBoard(int n, int m, Params params, CODE *status);
+BoardPtr createBoard(int n, int m, Params params, code *status);
 
-void initializeLevel(BoardPtr board, int level, CODE *status);
+void initializeLevel(BoardPtr board, int level, code *status);
 
-void displayBoard(BoardPtr b, CODE *status);
+void displayBoard(BoardPtr b, code *status);
 
-BOOL checkCandies(BoardPtr board, CandyPtr candy, int x, int y);
+boolean checkInitializedCandies(BoardPtr board, CandyPtr candy, int x, int y);
 
 void destroyBoard(BoardPtr *b);
 
